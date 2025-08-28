@@ -1,8 +1,9 @@
 import pygame
+from projectile import Projectile
 
-
-class Player:
-    def __init__(self, x:int =100, y:int =100, size:int =50, life:int =100):
+class Player(pygame.sprite.Sprite):
+    def __init__(self,groups:pygame.sprite.Group, x:int =100, y:int =100, size:int =50, life:int =100):
+        super().__init__(groups)
         self.x = x
         self.y = y
         self.size = size
@@ -37,3 +38,12 @@ class Player:
         elif keys[pygame.K_RIGHT]:
             new_x = min(screen_width - self.size, self.x + 5)
             self.update_position(new_x, self.y)
+
+    def shooting(self, event):
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT or event.key == pygame.K_SPACE:
+                projectile_x = self.x + self.size // 2
+                projectile_y = self.y
+                return Projectile(projectile_x, projectile_y)
+            return None
+
