@@ -11,7 +11,8 @@ class Game:
         pygame.display.set_caption("August 2025 Game")
         self.clock = pygame.time.Clock()
         self.running = True
-        self.player = Player(x=self.screen.get_width()/2, y=self.height-50)
+        self.all_sprites = pygame.sprite.Group()
+        self.player = Player(self.all_sprites,x=self.screen.get_width()/2, y=self.height-50)
 
     def handle_events(self):
         for event in pygame.event.get():
@@ -20,6 +21,8 @@ class Game:
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     self.running = False
+
+            self.player.shooting(event)
 
     def update(self):
         self.player.handle_input(self.screen.get_width())
