@@ -12,7 +12,7 @@ class Game:
         self.clock = pygame.time.Clock()
         self.running = True
         self.all_sprites = pygame.sprite.Group()
-        self.player = Player(self.all_sprites,x=self.screen.get_width()/2, y=self.height-50)
+        self.player = Player(self.all_sprites,self.width//2, self.height//2,self.screen,50,100)
 
     def handle_events(self):
         for event in pygame.event.get():
@@ -22,22 +22,14 @@ class Game:
                 if event.key == pygame.K_ESCAPE:
                     self.running = False
 
-            self.player.shooting(event)
-
-    def update(self):
-        self.player.handle_input(self.screen.get_width())
-
-    def draw(self):
-        self.screen.fill((0, 0, 0))
-        self.player.draw(self.screen)
-        pygame.display.flip()
-
     def run(self):
         while self.running:
             self.handle_events()
-            self.update()
-            self.draw()
+            self.screen.fill((0, 0, 0))
             self.clock.tick(60)
+            self.all_sprites.draw(self.screen)
+            self.all_sprites.update()
+            pygame.display.flip()
 
         pygame.quit()
         sys.exit()
