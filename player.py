@@ -1,7 +1,7 @@
 import pygame
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self,groups, x, y,screen, size, life):
+    def __init__(self,groups: pygame.sprite.Sprite, x:int, y:int,screen:pygame.display, size:int, life:int):
         super().__init__(groups)
         self.x = x
         self.y = y
@@ -9,6 +9,8 @@ class Player(pygame.sprite.Sprite):
         self.life = life
         self.max_life = life
         self.color = (0, 0, 255)
+        self.image = pygame.Surface((size, size))
+        self.image.fill((255, 0, 0))
         self.rect = pygame.Rect(x, y, size, size)
         self.screen_width = screen.get_width()
 

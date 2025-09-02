@@ -12,19 +12,17 @@ class Game:
         self.clock = pygame.time.Clock()
         self.running = True
         self.all_sprites = pygame.sprite.Group()
-        self.player = Player(self.all_sprites,self.width//2, self.height//2,self.screen,50,100)
-
-    def handle_events(self):
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                self.running = False
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    self.running = False
+        self.player = Player(self.all_sprites,self.width//2, self.height - 50,self.screen,50,100)
 
     def run(self):
         while self.running:
-            self.handle_events()
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.running = False
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        self.running = False
+
             self.screen.fill((0, 0, 0))
             self.clock.tick(60)
             self.all_sprites.draw(self.screen)
