@@ -1,6 +1,7 @@
 import pygame
 import sys
 from player import Player
+from bullet import Bullet
 
 class Game:
     def __init__(self, width:int=800, height:int=600):
@@ -14,6 +15,12 @@ class Game:
         self.all_sprites = pygame.sprite.Group()
         self.player = Player(self.all_sprites,self.width//2, self.height - 50,self.screen,50,100)
 
+    def shoot(self,event:pygame.event.Event):
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+            bullet = Bullet(self.all_sprites,
+                            self.player.x + self.player.size // 2 - 5,
+                            self.player.y, self.screen, 10,5)
+
     def run(self):
         while self.running:
             for event in pygame.event.get():
@@ -22,6 +29,7 @@ class Game:
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         self.running = False
+                self.shoot(event)
 
             self.screen.fill((0, 0, 0))
             self.clock.tick(60)
