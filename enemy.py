@@ -1,13 +1,13 @@
 import pygame
 
-class Bullet(pygame.sprite.Sprite):
+class Enemy(pygame.sprite.Sprite):
     def __init__(self,groups: pygame.sprite.Sprite, x:int, y:int,screen:pygame.display, size:int,speed:int,rgb:tuple):
         super().__init__(groups)
         self.x = x
         self.y = y
         self.screen = screen
         self.size = size
-        self.name = "bullet"
+        self.name = "enemy"
         self.image = pygame.Surface((size, size))
         self.image.fill(rgb)
         self.rect = pygame.Rect(x, y, size, size)
@@ -20,8 +20,8 @@ class Bullet(pygame.sprite.Sprite):
         self.rect.y = y
 
     def update(self):
-        self.y -= self.speed
+        self.y += self.speed
         self.update_position(self.x, self.y)
 
-        if self.y < 0:
+        if self.y > 600:
             self.kill()
