@@ -44,6 +44,24 @@ class Game:
                         self.enemy_x_spawn,
                         0, self.screen, self.enemy_size, self.enemy_speed, self.enemy_color)
 
+    def enemy_groups(self):
+        enemies_list = [sprite for sprite in self.all_sprites if hasattr(sprite, 'enemy')]
+        return enemies_list
+
+    def bullets_groups(self):
+        bullet_group = [sprite for sprite in self.all_sprites if hasattr(sprite, 'bullet')]
+        return bullet_group
+
+    def collisions(self):
+        enemies = pygame.sprite.Group(self.enemy_groups())
+        bullets = pygame.sprite.Group(self.bullets_groups())
+
+        for bullet in bullets:
+            hit_enemy = pygame.sprite.spritecollideany(bullet, enemies)
+            if hit_enemy:
+                bullet.kill()
+                hit_enemy.kill()
+
     def run(self):
         while self.running:
             for event in pygame.event.get():
@@ -61,6 +79,7 @@ class Game:
             self.clock.tick(60)
             self.all_sprites.draw(self.screen)
             self.all_sprites.update()
+            self.collisions()
             pygame.display.flip()
 
         pygame.quit()
