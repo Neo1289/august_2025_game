@@ -7,7 +7,7 @@ class Enemy(pygame.sprite.Sprite):
         self.y = y
         self.screen = screen
         self.size = size
-        self.name = "enemy"
+        self.enemy = True
         self.image = pygame.Surface((size, size))
         self.image.fill(rgb)
         self.rect = pygame.Rect(x, y, size, size)
