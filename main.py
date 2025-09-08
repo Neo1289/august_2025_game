@@ -15,7 +15,7 @@ class Game:
         self.clock = pygame.time.Clock()
         self.running = True
         self.all_sprites = pygame.sprite.Group()
-        self.player = Player(self.all_sprites,self.width//2, self.height - 50,self.screen,50,100)
+        self.player = Player(self.all_sprites,self.width//2, self.height - 50,self.screen,50,10)
 
         ###bullets features
         self.bullets = 100
@@ -40,9 +40,9 @@ class Game:
 
     def enemy(self):
         self.enemy_x_spawn = random.randint(0, 750)
-        enemy = Enemy(self.all_sprites,
+        Enemy(self.all_sprites,
                         self.enemy_x_spawn,
-                        0, self.screen, self.enemy_size, self.enemy_speed, self.enemy_color)
+                        0, self.screen, self.enemy_size, self.enemy_speed, self.enemy_color,3)
 
     def enemy_groups(self):
         enemies_list = [sprite for sprite in self.all_sprites if hasattr(sprite, 'enemy')]
@@ -60,7 +60,21 @@ class Game:
             hit_enemy = pygame.sprite.spritecollideany(bullet, enemies)
             if hit_enemy:
                 bullet.kill()
-                hit_enemy.kill()
+                hit_enemy.life -= 1
+                if hit_enemy.life <= 0:
+                    hit_enemy.kill()
+
+    def player_damaged(self):
+        enemies = self.enemy_groups()
+        for enemy in enemies:
+            if enemy.y > self.height:
+                self.player.take_damage(1)
+                break
+
+    def display_captions(self):
+        self.caption = (f"\u2665 {self.player.life}     "
+                        f"Bullets: {self.bullets}")
+        pygame.display.set_caption(self.caption)
 
     def run(self):
         while self.running:
@@ -80,11 +94,12 @@ class Game:
             self.all_sprites.draw(self.screen)
             self.all_sprites.update()
             self.collisions()
+            self.player_damaged()
+            self.display_captions()
             pygame.display.flip()
 
         pygame.quit()
         sys.exit()
-
 
 def main():
     game = Game()

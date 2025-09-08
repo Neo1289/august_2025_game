@@ -1,7 +1,7 @@
 import pygame
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self,groups: pygame.sprite.Sprite, x:int, y:int,screen:pygame.display, size:int,speed:int,rgb:tuple):
+    def __init__(self,groups: pygame.sprite.Sprite, x:int, y:int,screen:pygame.display, size:int,speed:int,rgb:tuple,life:int):
         super().__init__(groups)
         self.x = x
         self.y = y
@@ -12,6 +12,7 @@ class Enemy(pygame.sprite.Sprite):
         self.image.fill(rgb)
         self.rect = pygame.Rect(x, y, size, size)
         self.speed = speed
+        self.life = life
 
     def update_position(self, x: int, y: int):
         self.x = x
@@ -23,5 +24,5 @@ class Enemy(pygame.sprite.Sprite):
         self.y += self.speed
         self.update_position(self.x, self.y)
 
-        if self.y > 600:
+        if self.y > 603:
             self.kill()
