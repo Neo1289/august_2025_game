@@ -8,8 +8,9 @@ class Bullet(pygame.sprite.Sprite):
         self.screen = screen
         self.size = size
         self.bullet = True
+        self.rgb = rgb
         self.image = pygame.Surface((size, size))
-        self.image.fill(rgb)
+        self.image.fill(self.rgb)
         self.rect = pygame.Rect(x, y, size, size)
         self.speed = speed
 
