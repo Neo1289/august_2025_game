@@ -7,15 +7,18 @@ import random
 
 class Game:
     def __init__(self, width:int=800, height:int=600):
+
         pygame.init()
         self.width = width
         self.height = height
         self.screen = pygame.display.set_mode((self.width, self.height))
         pygame.display.set_caption("August 2025 Game")
         self.clock = pygame.time.Clock()
+        self.start_time = pygame.time.get_ticks()
         self.running = True
         self.all_sprites = pygame.sprite.Group()
         self.player = Player(self.all_sprites,self.width//2, self.height - 50,self.screen,50,10)
+        self.last_level_time = 0
 
         ###bullets features
         self.bullets = 100
@@ -30,6 +33,7 @@ class Game:
         self.enemy_speed = 2
         self.enemy_size = 20
         self.enemy_color = (200,200,200)
+        self.enemy_life = 3
 
     def shoot(self,event:pygame.event.Event):
         if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE and self.bullets > 0:
@@ -40,9 +44,9 @@ class Game:
 
     def enemy(self):
         self.enemy_x_spawn = random.randint(0, 750)
-        Enemy(self.all_sprites,
+        self.new_enemy = Enemy(self.all_sprites,
                         self.enemy_x_spawn,
-                        0, self.screen, self.enemy_size, self.enemy_speed, self.enemy_color,3)
+                        0, self.screen, self.enemy_size, self.enemy_speed, self.enemy_color,self.enemy_life)
 
     def enemy_groups(self):
         enemies_list = [sprite for sprite in self.all_sprites if hasattr(sprite, 'enemy')]
@@ -72,9 +76,22 @@ class Game:
                 break
 
     def display_captions(self):
+        self.elapsed_time = (pygame.time.get_ticks() - self.start_time) // 1000
+
         self.caption = (f"\u2665 {self.player.life}     "
-                        f"Bullets: {self.bullets}")
+                        f"bullets: {self.bullets}     "
+                        f"time passed: {self.elapsed_time}"
+                        )
         pygame.display.set_caption(self.caption)
+
+    def level_increase(self):
+        current_level = self.elapsed_time // 20
+        if current_level > self.last_level_time and self.elapsed_time > 0:
+            self.enemy_life += 1
+            self.last_level_time = current_level
+            enemies = enemy.groups()
+            for enemy in enemies:
+                enemy.rgb = enemy.color_generator.color()
 
     def run(self):
         while self.running:
@@ -96,6 +113,7 @@ class Game:
             self.collisions()
             self.player_damaged()
             self.display_captions()
+            self.level_increase()
             pygame.display.flip()
 
         pygame.quit()
