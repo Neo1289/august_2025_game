@@ -11,8 +11,17 @@ class ColorChange:
             5: (153, 102, 204),
         }
 
-    def get_color(self, number):
+    def get_color(self, number:int):
         return self.rgb_dict.get(number, (255, 255, 255))
+
+class ShootMissiles:
+    def __init__(self):
+        ###create a missile rectangle
+        pass
+
+    def enemy_shoot(self,number:int):
+        if number > 2:
+            pass
 
 class Enemy(pygame.sprite.Sprite):
     def __init__(self,groups: pygame.sprite.Sprite, x:int, y:int,screen:pygame.display, size:int,speed:int,life:int,level:int):
@@ -27,8 +36,13 @@ class Enemy(pygame.sprite.Sprite):
         self.speed = speed
         self.life = life
         self.level = level
+        #####classes composition
+        ####first class
         self.color_generator = ColorChange()
         self.image.fill(self.color_generator.get_color(self.level))
+        ####second class
+        self.shooting = ShootMissiles()
+        self.shooting.enemy_shoot(self.level)
 
     def update_position(self, x: int, y: int):
         self.x = x
