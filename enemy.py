@@ -1,16 +1,21 @@
 import pygame
-import random
+
 
 class ColorChange:
-    def color(self):
-        r = random.randint(0, 255)
-        g = random.randint(0, 255)
-        b = random.randint(0, 255)
-        return (r, g, b)
+    def __init__(self):
+        self.rgb_dict = {
+            1: (45, 125, 255),
+            2: (255, 99, 71),
+            3: (60, 179, 113),
+            4: (255, 206, 84),
+            5: (153, 102, 204),
+        }
 
+    def get_color(self, number):
+        return self.rgb_dict.get(number, (255, 255, 255))
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self,groups: pygame.sprite.Sprite, x:int, y:int,screen:pygame.display, size:int,speed:int,rgb:tuple,life:int):
+    def __init__(self,groups: pygame.sprite.Sprite, x:int, y:int,screen:pygame.display, size:int,speed:int,life:int,level:int):
         super().__init__(groups)
         self.x = x
         self.y = y
@@ -18,12 +23,12 @@ class Enemy(pygame.sprite.Sprite):
         self.size = size
         self.enemy = True
         self.image = pygame.Surface((size, size))
-        self.rgb = rgb
-        self.image.fill(self.rgb)
         self.rect = pygame.Rect(x, y, size, size)
         self.speed = speed
         self.life = life
+        self.level = level
         self.color_generator = ColorChange()
+        self.image.fill(self.color_generator.get_color(self.level))
 
     def update_position(self, x: int, y: int):
         self.x = x

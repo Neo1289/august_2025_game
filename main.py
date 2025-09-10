@@ -46,7 +46,7 @@ class Game:
         self.enemy_x_spawn = random.randint(0, 750)
         self.new_enemy = Enemy(self.all_sprites,
                         self.enemy_x_spawn,
-                        0, self.screen, self.enemy_size, self.enemy_speed, self.enemy_color,self.enemy_life)
+                        0, self.screen, self.enemy_size, self.enemy_speed,self.enemy_life, self.last_level_time)
 
     def enemy_groups(self):
         enemies_list = [sprite for sprite in self.all_sprites if hasattr(sprite, 'enemy')]
@@ -89,9 +89,6 @@ class Game:
         if current_level > self.last_level_time and self.elapsed_time > 0:
             self.enemy_life += 1
             self.last_level_time = current_level
-            enemies = enemy.groups()
-            for enemy in enemies:
-                enemy.rgb = enemy.color_generator.color()
 
     def run(self):
         while self.running:
