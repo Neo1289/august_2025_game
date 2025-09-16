@@ -4,6 +4,7 @@ from player import Player
 from bullet import Bullet
 from enemy import Enemy
 import random
+from fruit import Fruit
 
 class Game:
     def __init__(self, width:int=800, height:int=600):
@@ -25,6 +26,7 @@ class Game:
         self.bullet_speed = 5
         self.bullet_size = 10
         self.bullet_color = (255, 255, 0)
+        self.bullet_strength = 1
 
         ###enemies
         self.custom_event = pygame.event.custom_type()
@@ -34,6 +36,12 @@ class Game:
         self.enemy_size = 20
         self.enemy_color = (200,200,200)
         self.enemy_life = 3
+
+        ###fruits
+        self.fruit_speed = 3
+        self.fruit_size = 10
+        self.fruit_color = (255, 100, 100)
+
 
     def shoot(self,event:pygame.event.Event):
         if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE and self.bullets > 0:
@@ -47,6 +55,10 @@ class Game:
         self.new_enemy = Enemy(self.all_sprites,
                         self.enemy_x_spawn,
                         0, self.screen, self.enemy_size, self.enemy_speed,self.enemy_life, self.last_level_time)
+
+    def fruit_spawn(self):
+        self.fruit_x_spawn = random.randint(0, 750)
+        self.new_fruit = Fruit(self.all_sprites,self.fruit_x_spawn,0,self.screen,self.fruit_size,self.fruit_speed)
 
     def enemy_groups(self):
         enemies_list = [sprite for sprite in self.all_sprites if hasattr(sprite, 'enemy')]
@@ -64,9 +76,13 @@ class Game:
             hit_enemy = pygame.sprite.spritecollideany(bullet, enemies)
             if hit_enemy:
                 bullet.kill()
-                hit_enemy.life -= 1
+                hit_enemy.life -= self.bullet_strength
                 if hit_enemy.life <= 0:
                     hit_enemy.kill()
+
+        for enemy in enemies:
+            if(hasattr(enemy,"additional_gear")):
+                enemy.life += 1
 
     def player_damaged(self):
         enemies = self.enemy_groups()
@@ -83,6 +99,9 @@ class Game:
                         f"time passed: {self.elapsed_time}"
                         )
         pygame.display.set_caption(self.caption)
+
+        if self.elapsed_time % 10 == 0:
+            self.fruit_spawn()
 
     def level_increase(self):
         current_level = self.elapsed_time // 20
