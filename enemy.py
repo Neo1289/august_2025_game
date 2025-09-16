@@ -19,7 +19,6 @@ class AdditionalGear:
         self.image = pygame.Surface((size, size))
         self.rect = pygame.Rect(x, y, size, size)
         self.image.fill((25, 255, 255))
-        self.life = 3
 
 class Enemy(pygame.sprite.Sprite):
     def __init__(self, groups: pygame.sprite.Sprite, x: int, y: int, screen: pygame.display, size: int, speed: int, life: int, level: int):
@@ -40,12 +39,13 @@ class Enemy(pygame.sprite.Sprite):
         self.color_generator = ColorChange()
         self.image.fill(self.color_generator.get_color(self.level))
 
+        if self.level >=1:
         ###second class
-        self.additional_gear = AdditionalGear(0, 0, self.size)
+            self.additional_gear = AdditionalGear(0, 0, self.size)
 
-        gear_x = (self.size - self.additional_gear.rect.width) // 2
-        gear_y = self.size - self.additional_gear.rect.height // 2
-        self.image.blit(self.additional_gear.image, (gear_x, gear_y))
+            gear_x = (self.size - self.additional_gear.rect.width) // 2
+            gear_y = self.size - self.additional_gear.rect.height // 2
+            self.image.blit(self.additional_gear.image, (gear_x, gear_y))
 
     def update_position(self, x: int, y: int):
         self.x = x
