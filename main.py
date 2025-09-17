@@ -34,13 +34,14 @@ class Game:
         pygame.time.set_timer(self.custom_event, self.spawn_time)
         self.enemy_speed = 2
         self.enemy_size = 20
-        self.enemy_color = (200,200,200)
+        self.enemy_color = (50,200,200)
         self.enemy_life = 3
 
         ###fruits
-        self.fruit_speed = 3
+        self.fruit_speed = 5
         self.fruit_size = 10
         self.fruit_color = (255, 100, 100)
+        self.last_fruit_spawn_time = -1
 
 
     def shoot(self,event:pygame.event.Event):
@@ -58,7 +59,7 @@ class Game:
 
     def fruit_spawn(self):
         self.fruit_x_spawn = random.randint(0, 750)
-        self.new_fruit = Fruit(self.all_sprites,self.fruit_x_spawn,0,self.screen,self.fruit_size,self.fruit_speed)
+        self.new_fruit = Fruit(self.all_sprites,self.fruit_x_spawn,0,self.fruit_size,self.fruit_speed,self.fruit_color)
 
     def enemy_groups(self):
         enemies_list = [sprite for sprite in self.all_sprites if hasattr(sprite, 'enemy')]
@@ -67,6 +68,10 @@ class Game:
     def bullets_groups(self):
         bullet_group = [sprite for sprite in self.all_sprites if hasattr(sprite, 'bullet')]
         return bullet_group
+
+    def fruits_groups(self):
+        fruit_group = [sprite for sprite in self.all_sprites if hasattr(sprite,'fruit')]
+        return fruit_group
 
     def collisions(self):
         enemies = pygame.sprite.Group(self.enemy_groups())
@@ -100,13 +105,25 @@ class Game:
                         )
         pygame.display.set_caption(self.caption)
 
-        if self.elapsed_time % 10 == 0:
+    def fruit_handler(self):
+        fruits_gr = pygame.sprite.Group(self.fruits_groups())
+
+        if self.elapsed_time % 10 == 0 and self.elapsed_time != self.last_fruit_spawn_time:
             self.fruit_spawn()
+            self.last_fruit_spawn_time = self.elapsed_time
+
+        for fruit in fruits_gr:
+            if fruit.rect.colliderect(self.player.rect):
+                fruit.kill()
+                self.fruit_speed += 1
+                self.bullet_strength += 5
+
 
     def level_increase(self):
         current_level = self.elapsed_time // 20
         if current_level > self.last_level_time and self.elapsed_time > 0:
             self.enemy_life += 1
+            self.enemy_speed += 1
             self.last_level_time = current_level
 
     def run(self):
@@ -130,6 +147,7 @@ class Game:
             self.player_damaged()
             self.display_captions()
             self.level_increase()
+            self.fruit_handler()
             pygame.display.flip()
 
         pygame.quit()
