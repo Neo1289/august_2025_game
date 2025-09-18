@@ -14,6 +14,23 @@ class ColorChange:
     def get_color(self, number:int):
         return self.rgb_dict.get(number, (255, 255, 255))
 
+class AttributeChange:
+    def __init__(self):
+        self.mega_attribute = False
+        self.changed_x = 0
+
+    def change_attribute(self,level):
+        if level % 2 == 0:
+            self.mega_attribute = True
+        else:
+            self.mega_attribute = False
+        print(self.mega_attribute)
+
+    def change_position(self, y: int, x: int):
+        if self.mega_attribute and y > 300:
+            self.mega_attribute = False
+            self.changed_x = 1
+
 class AdditionalGear:
     def __init__(self, x:int, y:int, size:int):
         self.image = pygame.Surface((size, size))
@@ -47,6 +64,11 @@ class Enemy(pygame.sprite.Sprite):
             gear_y = self.size - self.additional_gear.rect.height // 2
             self.image.blit(self.additional_gear.image, (gear_x, gear_y))
 
+        ###third class
+        self.attribute_change = AttributeChange()
+        self.attribute_change.change_attribute(self.level)
+        self.attribute_change.change_position(self.y,self.x)
+
     def update_position(self, x: int, y: int):
         self.x = x
         self.y = y
@@ -55,7 +77,9 @@ class Enemy(pygame.sprite.Sprite):
 
     def update(self):
         self.y += self.speed
-        self.update_position(self.x, self.y)
+
+        self.attribute_change.change_position(self.y, self.x)
+        self.update_position(self.x + self.attribute_change.changed_x, self.y)
 
         if self.y > 603:
             self.kill()
