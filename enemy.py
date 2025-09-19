@@ -1,5 +1,7 @@
-import pygame
+from symtable import Class
 
+import pygame
+import random
 
 class ColorChange:
     def __init__(self):
@@ -16,20 +18,14 @@ class ColorChange:
 
 class AttributeChange:
     def __init__(self):
-        self.mega_attribute = False
         self.changed_x = 0
 
-    def change_attribute(self,level):
-        if level % 2 == 0:
-            self.mega_attribute = True
-        else:
-            self.mega_attribute = False
-        print(self.mega_attribute)
-
-    def change_position(self, y: int, x: int):
-        if self.mega_attribute and y > 300:
-            self.mega_attribute = False
-            self.changed_x = 1
+    def change_position(self,level, y: int):
+        self.positive = [1, 2, 3, 4, 5]
+        self.negative = [-1, -2, -3, -4, -5]
+        self.tuple_ge = (random.choice(self.positive), random.choice(self.negative))
+        if level < 3 and y > 100:
+            self.changed_x = random.choice(self.tuple_ge)
 
 class AdditionalGear:
     def __init__(self, x:int, y:int, size:int):
@@ -52,22 +48,20 @@ class Enemy(pygame.sprite.Sprite):
         self.level = level
         self.groups = groups
 
-        ####first class
+        ####1th class
         self.color_generator = ColorChange()
         self.image.fill(self.color_generator.get_color(self.level))
 
         if self.level >=1:
-        ###second class
+        ###2nd class
             self.additional_gear = AdditionalGear(0, 0, self.size)
 
             gear_x = (self.size - self.additional_gear.rect.width) // 2
             gear_y = self.size - self.additional_gear.rect.height // 2
             self.image.blit(self.additional_gear.image, (gear_x, gear_y))
 
-        ###third class
+        ###3rd class
         self.attribute_change = AttributeChange()
-        self.attribute_change.change_attribute(self.level)
-        self.attribute_change.change_position(self.y,self.x)
 
     def update_position(self, x: int, y: int):
         self.x = x
@@ -78,8 +72,8 @@ class Enemy(pygame.sprite.Sprite):
     def update(self):
         self.y += self.speed
 
-        self.attribute_change.change_position(self.y, self.x)
+        self.attribute_change.change_position(self.level,self.y)
         self.update_position(self.x + self.attribute_change.changed_x, self.y)
 
-        if self.y > 603:
+        if self.y > 610:
             self.kill()

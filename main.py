@@ -18,7 +18,7 @@ class Game:
         self.start_time = pygame.time.get_ticks()
         self.running = True
         self.all_sprites = pygame.sprite.Group()
-        self.player = Player(self.all_sprites,self.width//2, self.height - 50,self.screen,50,10)
+        self.player = Player(self.all_sprites,self.width//2, self.height - 50,self.screen,50,50)
         self.last_level_time = 0
         self.kills = 0
 
@@ -106,6 +106,7 @@ class Game:
                         f"time passed: {self.elapsed_time}    "
                         f"enemy killed: {self.kills}    "
                         f"bullet strength: {self.bullet_strength}    "
+                        f"level: {self.last_level_time}"
                         )
         pygame.display.set_caption(self.caption)
 
@@ -131,9 +132,9 @@ class Game:
             self.last_level_time = current_level
 
     def end_game(self):
-        if self.player.life <= 0:
+        if self.player.life <= 0 or self.bullets == 0:
             font = pygame.font.Font(None, 74)
-            game_over_text = font.render("GAME OVER", True, (255, 0, 0))
+            game_over_text = font.render(f"GAME OVER, enemies killed {self.kills}", True, (255, 0, 0))
             text_rect = game_over_text.get_rect(center=(self.width // 2, self.height // 2))
             self.screen.blit(game_over_text, text_rect)
             pygame.display.flip()
