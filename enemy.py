@@ -24,7 +24,7 @@ class AttributeChange:
         self.positive = [1, 2, 3, 4, 5]
         self.negative = [-1, -2, -3, -4, -5]
         self.tuple_ge = (random.choice(self.positive), random.choice(self.negative))
-        if level < 3 and y > 100:
+        if level % 3 == 0 and y > 100:
             self.changed_x = random.choice(self.tuple_ge)
 
 class AdditionalGear:
