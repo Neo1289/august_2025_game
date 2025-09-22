@@ -44,7 +44,7 @@ class Game:
         self.fruit_color = (255, 100, 100)
         self.last_fruit_spawn_time = -1
         self.fruit_taken = 0
-
+        self.fruit_strength = 10
 
     def shoot(self,event:pygame.event.Event):
         if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE and self.bullets > 0:
@@ -61,7 +61,7 @@ class Game:
 
     def fruit_spawn(self):
         self.fruit_x_spawn = random.randint(0, 750)
-        self.new_fruit = Fruit(self.all_sprites,self.fruit_x_spawn,0,self.fruit_size,self.fruit_speed,self.fruit_color)
+        self.new_fruit = Fruit(self.all_sprites,self.fruit_x_spawn,0,self.fruit_size,self.fruit_speed,self.fruit_color,self.last_level_time)
 
     def enemy_groups(self):
         enemies_list = [sprite for sprite in self.all_sprites if hasattr(sprite, 'enemy')]
@@ -97,6 +97,11 @@ class Game:
         for enemy in enemies:
             if enemy.y > self.height:
                 self.player.take_damage(1)
+                self.fruit_taken = 0
+                self.bullet_strength -= 1
+            if self.bullet_strength <= 0:
+                self.bullet_strength = 1
+
                 break
 
     def display_captions(self):
@@ -123,8 +128,9 @@ class Game:
             if fruit.rect.colliderect(self.player.rect):
                 fruit.kill()
                 self.fruit_speed += 1
-                self.bullet_strength += 10
+                self.bullet_strength += self.fruit_strength + fruit.potency
                 self.fruit_taken += 1
+                print(fruit.potency)
 
 
     def level_increase(self):
