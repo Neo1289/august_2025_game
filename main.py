@@ -130,8 +130,6 @@ class Game:
                 self.fruit_speed += 1
                 self.bullet_strength += self.fruit_strength + fruit.potency
                 self.fruit_taken += 1
-                print(fruit.potency)
-
 
     def level_increase(self):
         current_level = self.elapsed_time // 20
