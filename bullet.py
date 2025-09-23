@@ -26,6 +26,10 @@ class Bullet(pygame.sprite.Sprite):
         self.rect = pygame.Rect(x, y, self.size, self.size)
         self.speed = speed
 
+        # Create additional bullet if fruit_taken > 1
+        if self.fruit_taken > 1:
+            self.additional_bullet = AdditionalBullet(self)
+
     def update_position(self, x: int, y: int):
         self.x = x
         self.y = y
@@ -33,6 +37,28 @@ class Bullet(pygame.sprite.Sprite):
         self.rect.y = y
 
     def update(self):
+        self.y -= self.speed
+        self.update_position(self.x, self.y)
+
+        if self.y < 0:
+            self.kill()
+
+class AdditionalBullet(Bullet):
+    def __init__(self, main_bullet, offset: int = 100):
+        # Use the main bullet's attributes but don't store the reference
+        super().__init__(
+            main_bullet.groups(),
+            main_bullet.x + offset,
+            main_bullet.y,
+            main_bullet.screen,
+            main_bullet.size - main_bullet.giga_bull.change_size,
+            main_bullet.speed,
+            main_bullet.rgb,
+            0  # Prevent infinite recursion
+        )
+
+    def update(self):
+        # Just move like a normal bullet
         self.y -= self.speed
         self.update_position(self.x, self.y)
 
