@@ -44,7 +44,7 @@ class Bullet(pygame.sprite.Sprite):
             self.kill()
 
 class AdditionalBullet(Bullet):
-    def __init__(self, main_bullet, offset: int = 100):
+    def __init__(self, main_bullet, offset: int = 50):
         # Use the main bullet's attributes but don't store the reference
         super().__init__(
             main_bullet.groups(),
