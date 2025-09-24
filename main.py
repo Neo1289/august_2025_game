@@ -4,7 +4,7 @@ from player import Player
 from bullet import Bullet
 from enemy import Enemy
 import random
-from fruit import Fruit
+from fruit import Fruit, BubbleFruit
 
 class Game:
     def __init__(self, width:int=800, height:int=600):
@@ -62,6 +62,10 @@ class Game:
     def fruit_spawn(self):
         self.fruit_x_spawn = random.randint(0, 750)
         self.new_fruit = Fruit(self.all_sprites,self.fruit_x_spawn,0,self.fruit_size,self.fruit_speed,self.fruit_color,self.last_level_time)
+
+        if self.last_level_time > 0:
+            self.bubble_x_spawn = random.randint(0, 750)
+            self.bubble_fruit = BubbleFruit(self.all_sprites,self.bubble_x_spawn,0, self.fruit_size,self.fruit_speed,self.fruit_color,self.last_level_time)
 
     def enemy_groups(self):
         enemies_list = [sprite for sprite in self.all_sprites if hasattr(sprite, 'enemy')]
