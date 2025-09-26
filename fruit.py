@@ -50,9 +50,9 @@ class BubbleFruit(Fruit):
     def __init__(self, groups: pygame.sprite.Sprite, x: int, y: int, size: int, speed: int, color: tuple, level: int):
         super().__init__(groups, x, y, size, speed, color, level)
 
-        self.size = size + 10
         self.changed_x = 0
         self.speed = speed - 3
+        self.bubble_fruit = True
 
     def change_position(self):
         self.positive = [2, 3, 4, 5, 6, 7]
@@ -61,6 +61,9 @@ class BubbleFruit(Fruit):
         self.changed_x = random.choice(self.tuple_ge)
 
     def update(self):
+
+        random_color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+        self.image.fill(random_color)
         self.y += self.speed
         self.update_position(self.x, self.y)
 
@@ -69,4 +72,3 @@ class BubbleFruit(Fruit):
 
         if self.y > 603:
             self.kill()
-

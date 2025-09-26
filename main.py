@@ -135,6 +135,10 @@ class Game:
                 self.bullet_strength += self.fruit_strength + fruit.potency
                 self.fruit_taken += 1
 
+            if hasattr(fruit, 'bubble_fruit'):
+                self.player.life += 1
+                self.bullet_strength += 1
+
     def level_increase(self):
         current_level = self.elapsed_time // 20
         if current_level > self.last_level_time and self.elapsed_time > 0:
